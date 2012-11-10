@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+import argparse
+import os
+import subprocess
+import sys
+
+
+def deamonize():
+    if os.fork() != 0:
+        sys.exit()
+
+
+def run(executable, args, deamon):
+    def call(f, *args, **kwargs):
+        subprocess.call(
+            *args,
+            stdin=f,
+            stdout=f,
+            stderr=f,
+            **kwargs
+        )
+
+    args = (lambda *xs: xs)(executable, *args)
+    if deamon:
+        with open(os.devnull) as devnull:
+            call(devnull, args)
+    else:
+        call(None, args)
+
+
+def main():
+    try:
+        parser = argparse.ArgumentParser(description='foobar')
+        parser.add_argument('executable', metavar='executable', type=str,
+                            help='the program to supervise')
+        parser.add_argument('arguments', type=str, nargs='*',
+                            help='the arguments to pass to the program')
+        parser.add_argument('-d', '--deamon', dest='deamon',
+                            action='store_true',
+                            help='move to the background')
+        parser.add_argument('-r', '--restart', dest='restart',
+                            action='store_true',
+                            help='restart the program automatically')
+
+        args = parser.parse_args()
+
+        if args.deamon:
+            deamonize()
+
+        while True:
+            run(args.executable, args.arguments, args.deamon)
+            if not args.restart:
+                break
+
+    except KeyboardInterrupt:
+        pass
+
+
+if __name__ == '__main__':
+    main()
