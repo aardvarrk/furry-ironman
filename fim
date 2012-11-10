@@ -29,32 +29,31 @@ def run(executable, args, deamon):
 
 
 def main():
-    try:
-        parser = argparse.ArgumentParser(description='foobar')
-        parser.add_argument('executable', metavar='executable', type=str,
-                            help='the program to supervise')
-        parser.add_argument('arguments', type=str, nargs='*',
-                            help='the arguments to pass to the program')
-        parser.add_argument('-d', '--deamon', dest='deamon',
-                            action='store_true',
-                            help='move to the background')
-        parser.add_argument('-r', '--restart', dest='restart',
-                            action='store_true',
-                            help='restart the program automatically')
+    parser = argparse.ArgumentParser(description='foobar')
+    parser.add_argument('executable', metavar='executable', type=str,
+                        help='the program to supervise')
+    parser.add_argument('arguments', type=str, nargs='*',
+                        help='the arguments to pass to the program')
+    parser.add_argument('-d', '--deamon', dest='deamon',
+                        action='store_true',
+                        help='move to the background')
+    parser.add_argument('-r', '--restart', dest='restart',
+                        action='store_true',
+                        help='restart the program automatically')
 
-        args = parser.parse_args()
+    args = parser.parse_args()
 
-        if args.deamon:
-            deamonize()
+    if args.deamon:
+        deamonize()
 
-        while True:
-            run(args.executable, args.arguments, args.deamon)
-            if not args.restart:
-                break
-
-    except KeyboardInterrupt:
-        pass
+    while True:
+        run(args.executable, args.arguments, args.deamon)
+        if not args.restart:
+            break
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
