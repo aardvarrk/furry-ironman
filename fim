@@ -5,12 +5,12 @@ import subprocess
 import sys
 
 
-def deamonize():
+def daemonize():
     if os.fork() != 0:
         sys.exit()
 
 
-def run(executable, args, deamon):
+def run(executable, args, daemon):
     def call(f, *args, **kwargs):
         subprocess.call(
             *args,
@@ -21,7 +21,7 @@ def run(executable, args, deamon):
         )
 
     args = (lambda *xs: xs)(executable, *args)
-    if deamon:
+    if daemon:
         with open(os.devnull) as devnull:
             call(devnull, args)
     else:
@@ -34,7 +34,7 @@ def main():
                         help='the program to supervise')
     parser.add_argument('arguments', type=str, nargs='*',
                         help='the arguments to pass to the program')
-    parser.add_argument('-d', '--deamon', dest='deamon',
+    parser.add_argument('-d', '--daemon', dest='daemon',
                         action='store_true',
                         help='move to the background')
     parser.add_argument('-r', '--restart', dest='restart',
@@ -43,11 +43,11 @@ def main():
 
     args = parser.parse_args()
 
-    if args.deamon:
-        deamonize()
+    if args.daemon:
+        daemonize()
 
     while True:
-        run(args.executable, args.arguments, args.deamon)
+        run(args.executable, args.arguments, args.daemon)
         if not args.restart:
             break
 

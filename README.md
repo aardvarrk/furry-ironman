@@ -1,7 +1,7 @@
 Furry IronMan
 =============
 
-Furry IronMan is a supervising program that can deamonize and/or
+Furry IronMan is a supervising program that can daemonize and/or
 automatically restart other programs.
 
 To do
