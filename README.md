@@ -1,4 +1,4 @@
-furry-ironman
+Furry IronMan
 =============
 
 Furry IronMan is a supervising program that can deamonize and/or
